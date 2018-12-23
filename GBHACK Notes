@@ -1,0 +1,70 @@
+contract Attestation
+
+  1. Storage Variables:
+	universityCount
+		(uint) (public) Universities registered on the N/w.
+	University
+		(struct)
+			id (uint) University unique Id
+			name (string) University Name
+			location (string) University Address
+			email (string) Univeristy Contact Info
+			address (address) Block address
+			* degreeAwarded (uint) Degrees awarded by the university
+	
+	studentCount
+		(uint) (public) Students registered on the N/w.
+	Student
+		(struct)
+			id (uint) Student unique Id
+			name (string) Name of student
+			dob (string) Student DOB
+			email (string) Student contact
+			gpa (string/uint) Student GPA
+			universityId (uint) University the student is associated with
+			address (address) Block address
+	
+	degreeCount
+		(uint) (public) Degrees awarded by the N/w.
+	Degree
+		(struct)
+			id (string/uint) Degree unique Id
+			studentId (uint) Unique identity for student to whom degree is awarded
+			universityId (uint) Unique identity for university that awarded the degree
+			verified (bool) Degree true or fake?
+
+  2. Mappings:
+	students
+		(address/uint => Student) (public) Maps account address to particular student record
+	
+	universities
+		(address => University) (public) Maps account address to particular university
+	
+	degrees 
+		(uint => Degree) (public) Maps degreeId to particular Degree record
+
+  3. Functions:
+	addUniversity()
+		@args: id, name, location, email
+		@metadata: msg.sender
+		@scope: public
+		adds a new University record and updates universityCount
+
+	addStudent()
+		@args: id, name, dob, email, gpa, universityId
+		@metadata: msg.sender
+		@scope: public
+		adds a new Student record and updates studentCount, calls addDegree()
+
+	addDegree()
+		@args: studentId, universityId
+		@metadata: none
+		@scope: private
+		adds a new Degree with verified flag set to false
+
+	verifyDegree()
+		@args: id
+		@metadata: msg.sender
+		@scope: public
+		@tests: derive universityId from sender address, and verify if it matches specified id for that degree record
+		set the verified flag for that degree to true 
